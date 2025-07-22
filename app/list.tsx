@@ -1,6 +1,4 @@
-import { db } from '@/lib/firebase';
 import { useRouter } from 'expo-router';
-import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -12,21 +10,18 @@ type Lawyer = {
 };
 
 export default function LawyerListScreen() {
-   const router = useRouter();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [lawyers, setLawyers] = useState<Lawyer[]>([]);
   const [filteredData, setFilteredData] = useState<Lawyer[]>([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
+  useEffect(() => {
     const fetchLawyers = async () => {
       try {
-        const snapshot = await getDocs(collection(db, 'lawyers'));
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Lawyer[];
-
+        // Replace with your backend API URL
+        const response = await fetch('http://localhost:5000/api/lawyers');
+        const data: Lawyer[] = await response.json();
         setLawyers(data);
         setFilteredData(data);
       } catch (error) {
